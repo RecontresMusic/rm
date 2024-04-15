@@ -12,30 +12,7 @@ namespace rm
 {
     public class DataBaseConnect
     {
-        private static string ConnString = "server=188.187.190.68;user=ftp;password=qweqwe123;database=recmusic;";
-        private void RegisterDB(string Login, string password)
-        {
-            //string ConnString = "server=188.187.190.68;user=ftp;password=qweqwe123;database=recmusic;";
-            using (var connection = new MySqlConnection(ConnString))
-            {
-                HashPassword(password);
-                try
-                {
-                    connection.Open();
-                    string sql = "INSERT INTO recmusic (Login, Password) VALUES (@login, @password)";
-                    using (var cmd = new MySqlCommand(sql, connection))
-                    {
-                        cmd.Parameters.AddWithValue("@login", Login);
-                        cmd.Parameters.AddWithValue("@password", password);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error: " + ex);
-                }
-            }
-        }
+        private static string ConnString = "server=188.187.190.68;user=ftp;password=qweqwe123;database=recmusic;";        
         public static bool VerifyPassword(string enteredPassword, string storedHash)
         {
             byte[] hashBytes = Convert.FromBase64String(storedHash);

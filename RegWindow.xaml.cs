@@ -24,7 +24,8 @@ namespace rm
             }
             else
             {
-                MessageBox.Show("Login failed!");
+                MessageBox.Show("Incorrect Login or Password");
+               // MessageBox.Show()
             }
         }
 

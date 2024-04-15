@@ -158,7 +158,7 @@
                 Visibility="{Binding ElementsVisibility}"/>
         <Border Grid.Row="1" Background="#FF9E9E9E" CornerRadius="10" Margin="42,101,22,39"
                 Visibility="{Binding ElementsVisibility}">
-            <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Margin="3,3,3,3" Visibility="{Binding ElementsVisibility}"/>
+            <ListBox ItemsSource="{d:SampleData ItemCount=5}" Margin="3,3,3,3" Visibility="{Binding ElementsVisibility}"/>
         </Border>
         <Button Height="31" Background="#FF656565" BorderBrush="#FF656565" FontSize="20" FontFamily="Bahnschrift Light" RenderTransformOrigin="0.5,0" Content="➕" 
                 Margin="0,66,22,0" Foreground="#FFEDEDED" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Right" Width="34"
