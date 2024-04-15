@@ -20,6 +20,7 @@ namespace rm
             if (dbConnect.VerifyLogin(login, password))
             {
                 MessageBox.Show("Login successful!");
+                OpenMainWindowAndCloseThis();
             }
             else
             {
@@ -50,5 +51,11 @@ namespace rm
             }
         }
 
+        private void OpenMainWindowAndCloseThis()
+        {
+            Window1 mainWindow = new Window1();
+            mainWindow.Show();    // Открытие главного окна
+            this.Close();         // Закрытие текущего окна регистрации
+        }
     }
 }
