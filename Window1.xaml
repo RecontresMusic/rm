@@ -157,14 +157,16 @@
         <Border Grid.Row="1" Background="#FF656565" CornerRadius="10" Margin="32,61,12,30"
                 Visibility="{Binding ElementsVisibility}"/>
         <Border Grid.Row="1" Background="#FF9E9E9E" CornerRadius="10" Margin="42,101,22,39"
-                Visibility="{Binding ElementsVisibility}"/>
+                Visibility="{Binding ElementsVisibility}">
+            <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Margin="3,3,3,3" Visibility="{Binding ElementsVisibility}"/>
+        </Border>
         <Button Height="31" Background="#FF656565" BorderBrush="#FF656565" FontSize="20" FontFamily="Bahnschrift Light" RenderTransformOrigin="0.5,0" Content="➕" 
-                Margin="298,66,0,0" Foreground="#FFEDEDED" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" Width="34"
+                Margin="0,66,22,0" Foreground="#FFEDEDED" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Right" Width="34"
                 Visibility="{Binding ElementsVisibility}"/>
 
-        <Button Height="31" Background="#FF656565" BorderBrush="#FF656565" FontSize="25" FontFamily="Bahnschrift Light" RenderTransformOrigin="0.5,0" Content="↩️" 
-        Margin="0,66,278,0" Foreground="#FFEDEDED" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Right" Width="34"
-        Command="{Binding ToggleVisibilityCommand}" Visibility="{Binding !ElementsVisibility}"/>
+        <Button Height="31" BorderBrush="{Binding BorderBrush}" FontSize="25" FontFamily="Bahnschrift Light" RenderTransformOrigin="0.5,0" Content="{Binding ButtonContent}" 
+        Margin="42,66,0,0" Foreground="{Binding Foreground}" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" Width="34"
+        Command="{Binding ToggleVisibilityCommand}" Background="{Binding Background}"/>
     </Grid>
 </Window>
 

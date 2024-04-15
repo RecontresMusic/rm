@@ -32,6 +32,10 @@ namespace rm
     public class ViewModel : INotifyPropertyChanged
     {
         private Visibility _elementsVisibility = Visibility.Visible;
+        private Brush _background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF656565"));
+        private Brush _foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEDEDED"));
+        private Brush _borderbrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF656565")); 
+        private string _buttonContent = "↩️";
 
         public Visibility ElementsVisibility
         {
@@ -46,11 +50,79 @@ namespace rm
             }
         }
 
+        public Brush Background
+        {
+            get => _background;
+            set
+            {
+                if (_background != value)
+                {
+                    _background = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public Brush Foreground
+        {
+            get => _foreground;
+            set
+            {
+                if (_foreground != value)
+                {
+                    _foreground = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public Brush BorderBrush
+        {
+            get => _borderbrush;
+            set
+            {
+                if (_borderbrush != value)
+                {
+                    _borderbrush = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string ButtonContent
+        {
+            get => _buttonContent;
+            set
+            {
+                if (_buttonContent != value)
+                {
+                    _buttonContent = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+
+
         public ICommand ToggleVisibilityCommand { get; private set; }
 
         private void ToggleVisibility()
         {
-            ElementsVisibility = ElementsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            ElementsVisibility = ElementsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible; 
+
+            var currentColor = ((SolidColorBrush)_background).Color.ToString();
+            var newColorHex = currentColor == "#FF656565" ? "#FFEDEDED" : "#FF656565";
+            Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(newColorHex));
+
+            var currentColor2 = ((SolidColorBrush)_foreground).Color.ToString();
+            var newColorHex2 = currentColor2 == "#FFEDEDED" ? "#FF656565" : "#FFEDEDED";
+            Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(newColorHex2));
+
+            var currentColor3 = ((SolidColorBrush)_borderbrush).Color.ToString();
+            var newColorHex3 = currentColor3 == "#FF656565" ? "#FFEDEDED" : "#FF656565";
+            BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(newColorHex3));
+
+            ButtonContent = ButtonContent == "↩️" ? "↪️" : "↩️";
         }
 
         private bool _isPlaying;
