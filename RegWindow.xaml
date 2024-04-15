@@ -124,8 +124,8 @@
         <Button x:Name="LoginButton" Style="{StaticResource StylizedButton}" Content="Login" HorizontalAlignment="Left" Margin="46,0,0,148" Click="LoginButton_Click" Width="94" Height="40" VerticalAlignment="Bottom"/>
 
         <Button x:Name="RegisterButton" Style="{StaticResource StylizedButton}" Content="Register" Margin="0,0,40,148" Click="RegisterButton_Click" Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="94"/>
-        <Image HorizontalAlignment="Left" Height="173" Margin="54,115,0,0" VerticalAlignment="Top" Width="158" Source="/cloud.png"/>
-        <Label Content="Recmus" HorizontalAlignment="Left" Margin="112,194,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift SemiBold" FontSize="30" Foreground="#FF656565"/>
+        <Image HorizontalAlignment="Center" Height="173" Margin="0,123,0,0" VerticalAlignment="Top" Width="158" Source="/cloud.png"/>
+        <Label Content="Recmus" HorizontalAlignment="Center" Margin="0,190,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift SemiBold" FontSize="30" Foreground="#FF656565" RenderTransformOrigin="0.021,0.153"/>
         <Button Width="30" Height="29" Background="#FFEDEDED" BorderBrush="#FFEDEDED" FontSize="25" FontFamily="Bahnschrift Light" Click="CloseWindow" RenderTransformOrigin="0.5,0" Content="X" Margin="0,8,4,563" HorizontalAlignment="Right"/>
         <Image HorizontalAlignment="Left" Height="173" Margin="-67,486,0,0" VerticalAlignment="Top" Width="178" Source="/cloud.png" Grid.RowSpan="2"/>
 

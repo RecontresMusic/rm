@@ -204,7 +204,7 @@ namespace rm
         }
 
         public ICommand TogglePlayCommand { get; }
-
+        //System.Windows.Data Error: 40 : BindingExpression path error: 'RemoveItemCommand' property not found on 'object' ''String' (HashCode=-830691222)'. BindingExpression:Path=RemoveItemCommand; DataItem='String' (HashCode=-830691222); target element is 'MenuItem' (Name=''); target property is 'Command' (type 'ICommand')
         public ViewModel()
         {
             TogglePlayCommand = new RelayCommand(ExecuteTogglePlayCommand);
@@ -233,10 +233,12 @@ namespace rm
             };
             AddItemCommand = new RelayCommand(AddItem);
             RemoveItemCommand = new RelayCommand(RemoveItem, () => SelectedItem != null);
+            Console.WriteLine("1");
         }
 
         private void RemoveItem()
         {
+            Console.WriteLine("1");
             if (SelectedItem != null)
             {
                 Items.Remove(SelectedItem);
