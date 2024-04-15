@@ -1,18 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using MySql.Data;
-using MySql.Data.MySqlClient;
-using System.Text;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Net.NetworkInformation;
 using System.Windows;
 using System.Windows.Controls;
-using System.Management;
-using System.Windows.Input;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 
 namespace rm
