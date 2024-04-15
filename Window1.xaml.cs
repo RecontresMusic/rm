@@ -16,6 +16,7 @@ namespace rm
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
     using System.Windows.Media;
+    using System.Collections.ObjectModel;
 
     public class ViewModel : INotifyPropertyChanged
     {
@@ -24,6 +25,15 @@ namespace rm
         private Brush _foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEDEDED"));
         private Brush _borderbrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF656565")); 
         private string _buttonContent = "↩️";
+        public ObservableCollection<string> Items { get; set; }
+
+        public ICommand AddItemCommand { get; private set; }
+
+        private void AddItem()
+        {
+            // Добавление нового элемента в коллекцию
+            Items.Add("Playlist #" + (Items.Count + 1));
+        }
 
         public Visibility ElementsVisibility
         {
@@ -191,6 +201,25 @@ namespace rm
             _iconHeight = 25;
             _playPauseIcon = "M 0 0 L 15 0 L 15 30 L 0 30 Z M 15 0 L 30 0 L 30 30 L 15 30 Z";
             ToggleVisibilityCommand = new RelayCommand(ToggleVisibility);
+            // Инициализация коллекции элементов
+            Items = new ObservableCollection<string>{
+                "I",
+            "i",
+            "i",
+            "i",
+            "i",
+                "I",
+            "i",
+            "i",
+            "i",
+            "i",
+                "I",
+            "i",
+            "i",
+            "i",
+            "i",
+            };
+            AddItemCommand = new RelayCommand(AddItem);
         }
 
         private void ExecuteTogglePlayCommand()
@@ -377,7 +406,6 @@ namespace rm
                 
             }
         }
-
     }
 }
 

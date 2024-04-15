@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 using MySql.Data.MySqlClient;
 
 namespace rm
@@ -11,6 +12,16 @@ namespace rm
         public Window2()
         {
             InitializeComponent();
+        }
+
+        private void DragMoveWindow(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
+
+        private void CloseWindow(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)

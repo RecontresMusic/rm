@@ -6,6 +6,57 @@
         Title="Recmus" Height="700" Width="1280" WindowStyle="None" RenderTransformOrigin="0,0" MinWidth="600" MinHeight="700"
         AllowsTransparency="True" Background="Transparent"
         Loaded="Window_Loaded">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" CornerRadius="0" GlassFrameThickness="0" UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <!-- Стиль для ListBox -->
+        <Style x:Key="RoundedListBox" TargetType="{x:Type ListBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBox}">
+                        <Border CornerRadius="10" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer Padding="{TemplateBinding Padding}">
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type ScrollBar}" x:Key="CustomScrollBar" BasedOn="{StaticResource {x:Type ScrollBar}}">
+            <Setter Property="Width" Value="12"/>
+            <Setter Property="Margin" Value="0, 3, 3, 3"/>
+            <Setter Property="Background" Value="Gray"/>
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Vertical">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                <Grid>
+                                    <Rectangle Fill="{TemplateBinding Background}" Width="17" RadiusX="10" RadiusY="10">
+
+                                    </Rectangle>
+                                    <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                        <Track.Thumb>
+                                            <Thumb Background="DarkGray">
+                                                <Thumb.Template>
+                                                    <ControlTemplate TargetType="{x:Type Thumb}">
+                                                        <Border Background="DarkGray" CornerRadius="10"/>
+                                                    </ControlTemplate>
+                                                </Thumb.Template>
+                                            </Thumb>
+                                        </Track.Thumb>
+                                    </Track>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Window.RenderTransform>
         <TransformGroup>
             <ScaleTransform ScaleX="1"/>
@@ -18,10 +69,6 @@
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
-
-    <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="0" CornerRadius="0" GlassFrameThickness="0" UseAeroCaptionButtons="False"/>
-    </WindowChrome.WindowChrome>
 
     <!-- for animatsiya -->
 
@@ -156,13 +203,24 @@
         <!-- List with albums -->
         <Border Grid.Row="1" Background="#FF656565" CornerRadius="10" Margin="32,61,12,30"
                 Visibility="{Binding ElementsVisibility}"/>
+
         <Border Grid.Row="1" Background="#FF9E9E9E" CornerRadius="10" Margin="42,101,22,39"
                 Visibility="{Binding ElementsVisibility}">
-            <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Margin="3,3,3,3" Visibility="{Binding ElementsVisibility}"/>
+            <ListBox Style="{StaticResource RoundedListBox}" ItemsSource="{Binding Items}" Margin="3,3,3,3" Visibility="{Binding ElementsVisibility}" Background="#DD656565"
+                     BorderBrush="#FF9E9E9E" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.Resources>
+                    <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource CustomScrollBar}"/>
+                </ListBox.Resources>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="20" Padding="5" FontFamily="Bahnschrift SemiBold"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Border>
         <Button Height="31" Background="#FF656565" BorderBrush="#FF656565" FontSize="20" FontFamily="Bahnschrift Light" RenderTransformOrigin="0.5,0" Content="➕" 
                 Margin="0,66,22,0" Foreground="#FFEDEDED" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Right" Width="34"
-                Visibility="{Binding ElementsVisibility}"/>
+                Visibility="{Binding ElementsVisibility}" Command="{Binding AddItemCommand}"/>
 
         <Button Height="31" BorderBrush="{Binding BorderBrush}" FontSize="25" FontFamily="Bahnschrift Light" RenderTransformOrigin="0.5,0" Content="{Binding ButtonContent}" 
         Margin="42,66,0,0" Foreground="{Binding Foreground}" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" Width="34"
