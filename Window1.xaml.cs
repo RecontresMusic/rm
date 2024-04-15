@@ -28,6 +28,18 @@ namespace rm
         public ObservableCollection<string> Items { get; set; }
 
         public ICommand AddItemCommand { get; private set; }
+        public ICommand RemoveItemCommand { get; private set; }
+        private string _selectedItem;
+
+        public string SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                _selectedItem = value;
+                OnPropertyChanged(nameof(SelectedItem));
+            }
+        }
 
         private void AddItem()
         {
@@ -220,6 +232,15 @@ namespace rm
             "i",
             };
             AddItemCommand = new RelayCommand(AddItem);
+            RemoveItemCommand = new RelayCommand(RemoveItem, () => SelectedItem != null);
+        }
+
+        private void RemoveItem()
+        {
+            if (SelectedItem != null)
+            {
+                Items.Remove(SelectedItem);
+            }
         }
 
         private void ExecuteTogglePlayCommand()

@@ -213,7 +213,14 @@
                 </ListBox.Resources>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" FontSize="20" Padding="5" FontFamily="Bahnschrift SemiBold"/>
+                        <TextBlock Text="{Binding}" FontSize="20" Padding="5" FontFamily="Bahnschrift SemiBold">
+
+                            <TextBlock.ContextMenu>
+                                <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                    <MenuItem Header="Удалить" Command="{Binding RemoveItemCommand}" CommandParameter="{Binding}"/>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
