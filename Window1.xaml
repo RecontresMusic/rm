@@ -199,7 +199,8 @@
         </StackPanel>
         <TextBlock MouseLeftButtonDown="DragMoveWindow" Text="Recmus" Width="200" Height="40" Margin="36,13,0,0" FontSize="35" FontFamily="Bahnschrift SemiBold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
-        <Border Grid.Row="1" Background="#FFEDEDED" CornerRadius="10" Margin="32,61,32,30" Grid.ColumnSpan="2"/>
+        <Border Grid.Row="1" Background="#FFEDEDED" CornerRadius="10" Margin="32,61,32,30" Grid.ColumnSpan="2">
+        </Border>
         <!-- List with albums -->
         <Border Grid.Row="1" Background="#FF656565" CornerRadius="10" Margin="32,61,12,30"
                 Visibility="{Binding ElementsVisibility}"/>
@@ -228,12 +229,24 @@
         <Button Height="31" Background="#FF656565" BorderBrush="#FF656565" FontSize="20" 
         FontFamily="Bahnschrift Light" RenderTransformOrigin="0.5,0" Content="➕" 
         Margin="0,66,22,0" Foreground="#FFEDEDED" VerticalAlignment="Top" Grid.Row="1" 
+        HorizontalAlignment="Right" Width="34" Visibility="{Binding ElementsVisibility}"/>
+
+        <Button Height="31" Background="#FFEDEDED" BorderBrush="#FFEDEDED" FontSize="20" 
+        FontFamily="Bahnschrift Light" RenderTransformOrigin="0.5,0" Content="➕" 
+        Margin="0,66,40,0" Foreground="#FF656565" VerticalAlignment="Top" Grid.Row="1" 
         HorizontalAlignment="Right" Width="34" Visibility="{Binding ElementsVisibility}" 
-        Command="{Binding OpenFileCommand}"/>
+        Command="{Binding OpenFileCommand}" Grid.Column="1"/>
 
         <Button Height="31" BorderBrush="{Binding BorderBrush}" FontSize="25" FontFamily="Bahnschrift Light" RenderTransformOrigin="0.5,0" Content="{Binding ButtonContent}" 
         Margin="42,66,0,0" Foreground="{Binding Foreground}" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" Width="34"
         Command="{Binding ToggleVisibilityCommand}" Background="{Binding Background}"/>
+
+
+
+        <Border Grid.Row="1" CornerRadius="10" Background="#FFEDEDED" Margin="0,251,40,39" Grid.Column="1">
+            <ListBox BorderBrush="#FFEDEDED" Background="#FFEDEDED"/>
+        </Border>
+        <Rectangle Margin="0,242,40,0" Grid.Row="1" Stroke="Black" Grid.Column="1" Height="4" VerticalAlignment="Top"/>
     </Grid>
 </Window>
 
