@@ -65,6 +65,7 @@ namespace rm
         public ObservableCollection<Track> Items { get; private set; }
         public ICommand OpenFileCommand { get; private set; }
         public ICommand ToggleVisibilityCommand { get; private set; }
+        public ICommand TogglePlayCommand { get; }
         public ViewModel()
         {
             _tracksDictionary = new Dictionary<string, Track>();
@@ -72,6 +73,7 @@ namespace rm
             LoadTracks();
             OpenFileCommand = new RelayCommand(OpenFileCommandExecute);
             ToggleVisibilityCommand = new RelayCommand(ToggleVisibility);
+            TogglePlayCommand = new RelayCommand(ExecuteTogglePlayCommand);
             _iconMargin = new Thickness(20, 0, 0, 0);
             _iconWidth = 20;
             _iconHeight = 25;
@@ -183,6 +185,12 @@ namespace rm
         private double _iconWidth = 20;
         private double _iconHeight = 30;
         private string _playPauseIcon;
+
+        private void ExecuteTogglePlayCommand()
+        {
+            IsPlaying = !IsPlaying;
+            OnPropertyChanged("TriggerAnimation");
+        }
 
         public Thickness IconMargin
         {
