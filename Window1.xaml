@@ -75,7 +75,7 @@
     <Grid x:Name="mainGrid" Background="LightBlue">
         <!-- Определения столбцов -->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="177*" MinWidth="100"/>
+            <ColumnDefinition Width="{Binding FirstColumnWidth}" MinWidth="100"/>
             <ColumnDefinition Width="463*"/>
             <!-- Основной контент -->
             <ColumnDefinition Width="Auto"/>

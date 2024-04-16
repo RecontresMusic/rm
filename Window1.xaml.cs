@@ -174,6 +174,8 @@ namespace rm
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        //...
+
         #region Buttons
 
         private Brush _background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF656565"));
@@ -184,7 +186,19 @@ namespace rm
         private Thickness _iconMargin = new Thickness(20);
         private double _iconWidth = 20;
         private double _iconHeight = 30;
+        private double _columnWidth = 177;
         private string _playPauseIcon;
+
+        private GridLength _firstColumnWidth = new GridLength(177, GridUnitType.Star);
+        public GridLength FirstColumnWidth
+        {
+            get => _firstColumnWidth;
+            set
+            {
+                _firstColumnWidth = value;
+                OnPropertyChanged();
+            }
+        }
 
         private void ExecuteTogglePlayCommand()
         {
@@ -316,6 +330,7 @@ namespace rm
             BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(newColorHex3));
 
             ButtonContent = ButtonContent == "↩️" ? "↪️" : "↩️";
+            FirstColumnWidth = FirstColumnWidth.Value > 0 ? new GridLength(0) : new GridLength(177, GridUnitType.Star);
         }
 
         #endregion
