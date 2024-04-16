@@ -12,7 +12,7 @@ using System.IO;
 using System.Text.Json;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
-using System.Windows.Controls.Primitives;
+
 
 
 namespace rm
@@ -33,11 +33,19 @@ namespace rm
                 {
                     _isPlaying = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(IconData));
+                    IconMargin = IsPlaying ? new Thickness(18, 0, 0, 0) : new Thickness(20, 0, 0, 0);
+                    OnPropertyChanged(nameof(IconMargin));
+                    IconWidth = IsPlaying ? 20 : 20;
+                    IconHeight = IsPlaying ? 20 : 25;
+                    OnPropertyChanged(nameof(IconMargin));
+                    OnPropertyChanged(nameof(IconWidth));
+                    OnPropertyChanged(nameof(IconHeight));
                 }
             }
         }
         private Dictionary<string, Track> _tracksDictionary;
-        private const string TracksFilePath = "C:/Users/User/source/repos/rm/track.json"; // Путь к файлу для сохранения треков
+        private const string TracksFilePath = "E:/rm/rm/track.json"; // Путь к файлу для сохранения треков
 
         public Dictionary<string, Track> TracksDictionary
         {
@@ -53,12 +61,18 @@ namespace rm
         #region WorkWithTracks
         public ObservableCollection<Track> Items { get; private set; }
         public ICommand OpenFileCommand { get; private set; }
+        public ICommand ToggleVisibilityCommand { get; private set; }
         public ViewModel()
         {
             _tracksDictionary = new Dictionary<string, Track>();
             Items = new ObservableCollection<Track>();
             LoadTracks();
             OpenFileCommand = new RelayCommand(OpenFileCommandExecute);
+            ToggleVisibilityCommand = new RelayCommand(ToggleVisibility);
+            _iconMargin = new Thickness(20, 0, 0, 0);
+            _iconWidth = 20;
+            _iconHeight = 25;
+            _playPauseIcon = "M 0 0 L 15 0 L 15 30 L 0 30 Z M 15 0 L 30 0 L 30 30 L 15 30 Z";
         }
 
         private void LoadTracks()
@@ -142,6 +156,15 @@ namespace rm
             }
         }
 
+        
+
+
+        ~ViewModel()
+        {
+            SaveTracks();
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -149,11 +172,147 @@ namespace rm
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        #region Buttons
 
-        ~ViewModel()
+        private Brush _background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF656565"));
+        private Brush _foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEDEDED"));
+        private Brush _borderbrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF656565"));
+        private string _buttonContent = "↩️";
+        public string IconData => IsPlaying ? "m 10 13 L 10 4 H 3 L 3 13 Z V 4 L 14 4 H 14 H 14 V 13 Z" : "M0,0 L0,40 30,20 Z";
+        private Thickness _iconMargin = new Thickness(20);
+        private double _iconWidth = 20;
+        private double _iconHeight = 30;
+        private string _playPauseIcon;
+
+        public Thickness IconMargin
         {
-            SaveTracks();
+            get => _iconMargin;
+            set
+            {
+                if (_iconMargin != value)
+                {
+                    _iconMargin = value;
+                    OnPropertyChanged(nameof(IconMargin));
+                }
+            }
         }
+
+        public double IconHeight
+        {
+            get => _iconHeight;
+            set
+            {
+                if (_iconHeight != value)
+                {
+                    _iconHeight = value;
+                    OnPropertyChanged(nameof(IconHeight));
+                }
+            }
+        }
+
+        public double IconWidth
+        {
+            get => _iconWidth;
+            set
+            {
+                if (_iconWidth != value)
+                {
+                    _iconWidth = value;
+                    OnPropertyChanged(nameof(IconWidth));
+                }
+            }
+        }
+
+        public Brush Foreground
+        {
+            get => _foreground;
+            set
+            {
+                if (_foreground != value)
+                {
+                    _foreground = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public Brush BorderBrush
+        {
+            get => _borderbrush;
+            set 
+            {
+                if (_borderbrush != value)
+                {
+                    _borderbrush = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public Brush Background
+        {
+            get => _background;
+            set
+            {
+                if (_background != value)
+                {
+                    _background = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+
+        private Visibility _elementsVisibility = Visibility.Visible;
+
+        public Visibility ElementsVisibility
+        {
+            get => _elementsVisibility;
+            set
+            {
+                if (_elementsVisibility != value)
+                {
+                    _elementsVisibility = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string ButtonContent
+        {
+            get => _buttonContent;
+            set
+            {
+                if (_buttonContent != value)
+                {
+                    _buttonContent = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+
+
+        private void ToggleVisibility()
+        {
+            ElementsVisibility = ElementsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            var currentColor = ((SolidColorBrush)_background).Color.ToString();
+            var newColorHex = currentColor == "#FF656565" ? "#FFEDEDED" : "#FF656565";
+            Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(newColorHex));
+
+            var currentColor2 = ((SolidColorBrush)_foreground).Color.ToString();
+            var newColorHex2 = currentColor2 == "#FFEDEDED" ? "#FF656565" : "#FFEDEDED";
+            Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(newColorHex2));
+
+            var currentColor3 = ((SolidColorBrush)_borderbrush).Color.ToString();
+            var newColorHex3 = currentColor3 == "#FF656565" ? "#FFEDEDED" : "#FF656565";
+            BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(newColorHex3));
+
+            ButtonContent = ButtonContent == "↩️" ? "↪️" : "↩️";
+        }
+
+        #endregion
+
+
     }
     #endregion
 
