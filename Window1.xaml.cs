@@ -12,7 +12,10 @@ using System.IO;
 using System.Text.Json;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
-
+using System.Windows.Controls.Primitives;
+using Google.Protobuf.WellKnownTypes;
+using static Mysqlx.Expect.Open.Types.Condition.Types;
+using MySqlX.XDevAPI.Common;
 
 
 namespace rm
@@ -91,8 +94,7 @@ namespace rm
                             Items.Add(track);
                         }
                     }
-                }
-                catch (Exception ex)
+                } catch (Exception ex)
                 {
                     Debug.WriteLine("Error loading tracks: " + ex.Message);
                     // Handle exceptions as needed
@@ -135,8 +137,7 @@ namespace rm
                 Items.Add(newTrack); // Add to the ObservableCollection as well
                 SaveTracks();
                 OnPropertyChanged(nameof(Items)); // Notify the change for Items
-            }
-            else
+            } else
             {
                 MessageBox.Show("Track already exists.");
             }
@@ -148,15 +149,14 @@ namespace rm
             {
                 string json = JsonSerializer.Serialize(_tracksDictionary);
                 File.WriteAllText(TracksFilePath, json);
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
                 Debug.WriteLine("Error saving tracks: " + ex.Message);
                 // Здесь можете добавить более подробную обработку ошибок
             }
         }
 
-        
+
 
 
         ~ViewModel()
@@ -239,7 +239,7 @@ namespace rm
         public Brush BorderBrush
         {
             get => _borderbrush;
-            set 
+            set
             {
                 if (_borderbrush != value)
                 {
@@ -348,12 +348,12 @@ namespace rm
     #endregion
     #region WorkWithWPF
     public partial class Window1 : Window
-    {      
+    {
         public Window1()
         {
             InitializeComponent();
             Closing += OnWindowClosing;
-            this.DataContext = new ViewModel();            
+            this.DataContext = new ViewModel();
         }
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
@@ -399,7 +399,8 @@ namespace rm
         // Работа с верхней панелью
 
         private void CloseWindow(object sender, RoutedEventArgs e)
-        {            this.Close();
+        {
+            this.Close();
         }
 
         private void GoFullScreenButton(object sender, RoutedEventArgs e)
@@ -420,8 +421,7 @@ namespace rm
             if (this.WindowState != WindowState.Maximized)
             {
                 this.WindowState = WindowState.Maximized;
-            }
-            else
+            } else
             {
                 this.WindowState = WindowState.Normal;
             }
@@ -453,7 +453,7 @@ namespace rm
     }
 }
 #endregion
-    #region Classes
+#region Classes
 public class Item
 {
     public int Id { get; set; }
