@@ -189,7 +189,7 @@ namespace rm
         private double _columnWidth = 177;
         private string _playPauseIcon;
 
-        private GridLength _firstColumnWidth = new GridLength(177, GridUnitType.Star);
+        private GridLength _firstColumnWidth = new GridLength(95, GridUnitType.Star);
         public GridLength FirstColumnWidth
         {
             get => _firstColumnWidth;
@@ -330,7 +330,7 @@ namespace rm
             BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(newColorHex3));
 
             ButtonContent = ButtonContent == "↩️" ? "↪️" : "↩️";
-            FirstColumnWidth = FirstColumnWidth.Value > 0 ? new GridLength(0) : new GridLength(177, GridUnitType.Star);
+            FirstColumnWidth = FirstColumnWidth.Value > 0 ? new GridLength(0) : new GridLength(95, GridUnitType.Star);
         }
 
         #endregion
@@ -488,6 +488,12 @@ public class Track
     public string Author { get; set; }
     public string TrackName { get; set; }
     public string Path { get; set; }
+    // Здесь можете добавить свои свойства, например, Image обложки
+}
+public class Playlist
+{
+    public string Name { get; set; }
+    public string Tracks { get; set; }
     // Здесь можете добавить свои свойства, например, Image обложки
 }
 #endregion
