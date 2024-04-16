@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
+using Microsoft.Win32;
+using System.Collections.ObjectModel;
+using System.Windows.Controls.Primitives;
 
 
 namespace rm
@@ -18,6 +21,7 @@ namespace rm
     #region ViewModel
     public class ViewModel : INotifyPropertyChanged
     {
+        #region Init
         private bool _isPlaying;
 
         public bool IsPlaying
@@ -33,7 +37,7 @@ namespace rm
             }
         }
         private Dictionary<string, Track> _tracksDictionary;
-        private const string TracksFilePath = "tracks.json"; // Путь к файлу для сохранения треков
+        private const string TracksFilePath = "C:/Users/User/source/repos/rm/track.json"; // Путь к файлу для сохранения треков
 
         public Dictionary<string, Track> TracksDictionary
         {
@@ -44,15 +48,19 @@ namespace rm
                 OnPropertyChanged();
             }
         }
-
+        #endregion
 
         #region WorkWithTracks
+        public ObservableCollection<Track> Items { get; private set; }
         public ICommand OpenFileCommand { get; private set; }
         public ViewModel()
         {
+            _tracksDictionary = new Dictionary<string, Track>();
+            Items = new ObservableCollection<Track>();
             LoadTracks();
-            OpenFileCommand = new RelayCommand(OpenFileDialog);
+            OpenFileCommand = new RelayCommand(OpenFileCommandExecute);
         }
+
         private void LoadTracks()
         {
             if (File.Exists(TracksFilePath))
@@ -60,52 +68,66 @@ namespace rm
                 try
                 {
                     string json = File.ReadAllText(TracksFilePath);
-                    _tracksDictionary = JsonSerializer.Deserialize<Dictionary<string, Track>>(json) ?? new Dictionary<string, Track>();
+                    var tracksDictionary = JsonSerializer.Deserialize<Dictionary<string, Track>>(json);
+                    if (tracksDictionary != null)
+                    {
+                        Items.Clear();
+                        foreach (var track in tracksDictionary.Values)
+                        {
+                            Items.Add(track);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine("Error loading tracks: " + ex.Message);
-                    // Здесь можете добавить более подробную обработку ошибок
+                    // Handle exceptions as needed
                 }
             }
-            else
-            {
-                _tracksDictionary = new Dictionary<string, Track>();
-            }
-        }
-        private void OpenFileDialog()
-        {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.DefaultExt = ".mp3"; // Расширение файлов по умолчанию
-            dlg.Filter = "Audio files (*.mp3)|*.mp3|All files (*.*)|*.*"; // Фильтры файлов
-
-            bool? result = dlg.ShowDialog();
-
-            if (result == true)
-            {
-                // Получаем путь к выбранному файлу
-                string filename = dlg.FileName;
-                AddTrack(filename);
-            }
         }
 
-        private void AddTrack(string path)
+        private void OpenFileCommandExecute()
         {
-            // Извлечение имени файла для использования в качестве ключа или любой другой уникальной строки
-            var key = Path.GetFileNameWithoutExtension(path);
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Audio files (*.mp3;*.wav)|*.mp3;*.wav|All files (*.*)|*.*",
+                Multiselect = false
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string path = openFileDialog.FileName;
+                if (path != null)
+                {
+                    AddTrack(path);
+                }
+            }
+        }
+
+        public void AddTrack(string path)
+        {
+            string key = Path.GetFileNameWithoutExtension(path);
 
             if (!_tracksDictionary.ContainsKey(key))
             {
-                Track newTrack = new Track { Author = "Unknown", TrackName = key, Path = path };
+                var newTrack = new Track
+                {
+                    Author = "Unknown",
+                    TrackName = key,
+                    Path = path
+                };
+
                 _tracksDictionary.Add(key, newTrack);
-                OnPropertyChanged(nameof(TracksDictionary));
-                SaveTracks();  // Сохраняем треки после каждого добавления
+                Items.Add(newTrack); // Add to the ObservableCollection as well
+                SaveTracks();
+                OnPropertyChanged(nameof(Items)); // Notify the change for Items
             }
             else
             {
-                Debug.WriteLine("Track already exists.");
+                MessageBox.Show("Track already exists.");
             }
         }
+
         public void SaveTracks()
         {
             try
