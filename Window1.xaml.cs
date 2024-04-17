@@ -24,6 +24,31 @@ namespace rm
     #region ViewModel
     public class ViewModel : INotifyPropertyChanged
     {
+        private Playlist _selectedPlaylist;
+        public Playlist SelectedPlaylist
+        {
+            get => _selectedPlaylist;
+            set
+            {
+                if (_selectedPlaylist != value)
+                {
+                    _selectedPlaylist = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<Playlist> _playlists;
+        public ObservableCollection<Playlist> Playlists
+        {
+            get => _playlists;
+            set
+            {
+                _playlists = value;
+                OnPropertyChanged();
+            }
+        }
+
         #region Init
         private bool _isPlaying;
 
@@ -50,6 +75,8 @@ namespace rm
         private Dictionary<string, Track> _tracksDictionary;
         private const string TracksFilePath = "E:/rm/rm/track.json"; // Путь к файлу для сохранения треков
 
+        
+
         public Dictionary<string, Track> TracksDictionary
         {
             get => _tracksDictionary;
@@ -66,14 +93,14 @@ namespace rm
         public ICommand OpenFileCommand { get; private set; }
         public ICommand ToggleVisibilityCommand { get; private set; }
         public ICommand TogglePlayCommand { get; }
-
-        public ObservableCollection<Playlist> Playlists { get; set; }
         public ICommand AddPlaylistCommand { get; private set; }
-        public ICommand AddTrackToPlaylistCommand { get; private set; }
+
         public ViewModel()
         {
             _tracksDictionary = new Dictionary<string, Track>();
             Items = new ObservableCollection<Track>();
+            _playlists = new ObservableCollection<Playlist>();
+            AddPlaylistCommand = new RelayCommand(AddPlaylist);
             LoadTracks();
             OpenFileCommand = new RelayCommand(OpenFileCommandExecute);
             ToggleVisibilityCommand = new RelayCommand(ToggleVisibility);
@@ -82,22 +109,12 @@ namespace rm
             _iconWidth = 20;
             _iconHeight = 25;
             _playPauseIcon = "M 0 0 L 15 0 L 15 30 L 0 30 Z M 15 0 L 30 0 L 30 30 L 15 30 Z";
-            Playlists = new ObservableCollection<Playlist>();
-            AddPlaylistCommand = new RelayCommand(AddPlaylist);
-            //AddTrackToPlaylistCommand = new RelayCommand<Track>(AddTrackToPlaylist);
         }
-
         private void AddPlaylist()
         {
             Playlist newPlaylist = new Playlist { Name = $"Playlist {Playlists.Count + 1}" };
             Playlists.Add(newPlaylist);
             OnPropertyChanged(nameof(Playlists));
-        }
-
-        private void AddTrackToPlaylist(Track track)
-        {
-            // Здесь код для добавления трека в выбранный плейлист
-            // Этот метод должен как-то определить, в какой плейлист добавлять
         }
 
         private void LoadTracks()

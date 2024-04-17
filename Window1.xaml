@@ -201,6 +201,7 @@
         <TextBlock MouseLeftButtonDown="DragMoveWindow" Text="Recmus" Width="200" Height="40" Margin="36,13,0,0" FontSize="35" FontFamily="Bahnschrift SemiBold" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
 
         <Border Grid.Row="1" Background="#FFEDEDED" CornerRadius="10" Margin="32,61,32,30" Grid.ColumnSpan="3">
+            
         </Border>
         <!-- List with albums -->
         <Border Grid.Row="1" Background="#FF656565" CornerRadius="10" Margin="32,61,12,30"
@@ -208,7 +209,7 @@
 
         <Border Grid.Row="1" Background="#FF9E9E9E" CornerRadius="10" Margin="42,101,22,39"
                 Visibility="{Binding ElementsVisibility}" Grid.ColumnSpan="2">
-            <ListBox ItemsSource="{Binding Playlists}" Style="{StaticResource RoundedListBox}" Margin="3,3,3,3" Visibility="{Binding ElementsVisibility}" Background="#DD656565"
+            <ListBox x:Name="playlistListBox" ItemsSource="{Binding Playlists}" Style="{StaticResource RoundedListBox}" Margin="3,3,3,3" Visibility="{Binding ElementsVisibility}" Background="#DD656565"
                      BorderBrush="#FF9E9E9E" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <ListBox.Resources>
                     <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource CustomScrollBar}"/>
@@ -233,7 +234,7 @@
 
 
         <Border Grid.Row="1" CornerRadius="10" Background="#FFEDEDED" Margin="0,251,40,39" Grid.Column="2">
-            <ListBox BorderBrush="#FFEDEDED" Background="#FFEDEDED" ItemsSource="{Binding Items}">
+            <ListBox x:Name="trackListBox" BorderBrush="#FFEDEDED" Background="#FFEDEDED" ItemsSource="{Binding Items}">
                 <ListBox.Resources>
                     <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource CustomScrollBar}"/>
                 </ListBox.Resources>
