@@ -24,6 +24,18 @@ namespace rm
     #region ViewModel
     public class ViewModel : INotifyPropertyChanged
     {
+        public void SavePlaylists(List<Playlist> playlists)
+        {
+            string json = JsonSerializer.Serialize(playlists);
+            File.WriteAllText("playlist.json", json);
+        }
+
+        public List<Playlist> LoadPlaylists()
+        {
+            string json = File.ReadAllText("playlists.json");
+            return JsonSerializer.Deserialize<List<Playlist>>(json);
+        }
+
         private Playlist _selectedPlaylist;
         public Playlist SelectedPlaylist
         {
