@@ -52,6 +52,13 @@ namespace rm
         private const string JsonFilePath = "C:/Users/User/source/repos/rm/MusicData.json";
         public MusicLibrary MusicData { get; set; }
 
+        private void AddPlaylist()
+        {
+            Playlist newPlaylist = new Playlist { Name = $"Playlist {Playlists.Count + 1}" };
+            Playlists.Add(newPlaylist);
+            OnPropertyChanged(nameof(Playlists));
+        }
+
         public void LoadData()
         {
             if (File.Exists(JsonFilePath))
@@ -133,36 +140,12 @@ namespace rm
             LoadData();
             Items = new ObservableCollection<Track>(MusicData.AllTracks);
             Playlists = new ObservableCollection<Playlist>(MusicData.Playlists);
-
+            AddPlaylistCommand = new RelayCommand(AddPlaylist);
             OpenFileCommand = new RelayCommand(OpenFileCommandExecute);
             ToggleVisibilityCommand = new RelayCommand(ToggleVisibility);
             TogglePlayCommand = new RelayCommand(() => IsPlaying = !IsPlaying);
         }
-
-        private void LoadTracks()
-        {
-            if (File.Exists(TracksFilePath))
-            {
-                try
-                {
-                    string json = File.ReadAllText(TracksFilePath);
-                    var tracksDictionary = JsonSerializer.Deserialize<Dictionary<string, Track>>(json);
-                    if (tracksDictionary != null)
-                    {
-                        Items.Clear();
-                        foreach (var track in tracksDictionary.Values)
-                        {
-                            Items.Add(track);
-                        }
-                    }
-                } catch (Exception ex)
-                {
-                    Debug.WriteLine("Error loading tracks: " + ex.Message);
-                    // Handle exceptions as needed
-                }
-            }
-        }
-
+        
         private void OpenFileCommandExecute()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -206,23 +189,17 @@ namespace rm
             }
         }
 
-
-
-
         ~ViewModel()
         {
             SaveTracks();
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        //...
-
+        
         #region Buttons
 
         private Brush _background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF656565"));
@@ -381,8 +358,6 @@ namespace rm
         }
 
         #endregion
-
-
     }
     #endregion
 
