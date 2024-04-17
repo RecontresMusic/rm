@@ -208,7 +208,7 @@
 
         <Border Grid.Row="1" Background="#FF9E9E9E" CornerRadius="10" Margin="42,101,22,39"
                 Visibility="{Binding ElementsVisibility}" Grid.ColumnSpan="2">
-            <ListBox Style="{StaticResource RoundedListBox}" Margin="3,3,3,3" Visibility="{Binding ElementsVisibility}" Background="#DD656565"
+            <ListBox ItemsSource="{Binding Playlists}" Style="{StaticResource RoundedListBox}" Margin="3,3,3,3" Visibility="{Binding ElementsVisibility}" Background="#DD656565"
                      BorderBrush="#FF9E9E9E" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <ListBox.Resources>
                     <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource CustomScrollBar}"/>
@@ -218,7 +218,8 @@
         <Button Height="31" Background="#FF656565" BorderBrush="#FF656565" FontSize="20" 
         FontFamily="Bahnschrift Light" RenderTransformOrigin="0.5,0" Content="➕" 
         Margin="0,66,22,0" Foreground="#FFEDEDED" VerticalAlignment="Top" Grid.Row="1" 
-        HorizontalAlignment="Right" Width="34" Visibility="{Binding ElementsVisibility}" Grid.Column="1"/>
+        HorizontalAlignment="Right" Width="34" Visibility="{Binding ElementsVisibility}" Grid.Column="1"
+                 Command="{Binding AddPlaylistCommand}"/>
 
         <Button Height="31" Background="#FFEDEDED" BorderBrush="#FFEDEDED" FontSize="20" 
         FontFamily="Bahnschrift Light" RenderTransformOrigin="0.5,0" Content="➕" 

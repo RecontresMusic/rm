@@ -66,6 +66,10 @@ namespace rm
         public ICommand OpenFileCommand { get; private set; }
         public ICommand ToggleVisibilityCommand { get; private set; }
         public ICommand TogglePlayCommand { get; }
+
+        public ObservableCollection<Playlist> Playlists { get; set; }
+        public ICommand AddPlaylistCommand { get; private set; }
+        public ICommand AddTrackToPlaylistCommand { get; private set; }
         public ViewModel()
         {
             _tracksDictionary = new Dictionary<string, Track>();
@@ -78,6 +82,22 @@ namespace rm
             _iconWidth = 20;
             _iconHeight = 25;
             _playPauseIcon = "M 0 0 L 15 0 L 15 30 L 0 30 Z M 15 0 L 30 0 L 30 30 L 15 30 Z";
+            Playlists = new ObservableCollection<Playlist>();
+            AddPlaylistCommand = new RelayCommand(AddPlaylist);
+            //AddTrackToPlaylistCommand = new RelayCommand<Track>(AddTrackToPlaylist);
+        }
+
+        private void AddPlaylist()
+        {
+            Playlist newPlaylist = new Playlist { Name = $"Playlist {Playlists.Count + 1}" };
+            Playlists.Add(newPlaylist);
+            OnPropertyChanged(nameof(Playlists));
+        }
+
+        private void AddTrackToPlaylist(Track track)
+        {
+            // Здесь код для добавления трека в выбранный плейлист
+            // Этот метод должен как-то определить, в какой плейлист добавлять
         }
 
         private void LoadTracks()
@@ -493,7 +513,11 @@ public class Track
 public class Playlist
 {
     public string Name { get; set; }
-    public string Tracks { get; set; }
-    // Здесь можете добавить свои свойства, например, Image обложки
+    public ObservableCollection<Track> Tracks { get; set; }
+
+    public Playlist()
+    {
+        Tracks = new ObservableCollection<Track>();
+    }
 }
 #endregion
