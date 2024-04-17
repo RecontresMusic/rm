@@ -147,7 +147,7 @@ namespace rm
             _iconMargin = new Thickness(20, 0, 0, 0);
             _iconWidth = 20;
             _iconHeight = 25;
-            _playPauseIcon = "M 0 0 L 15 0 L 15 30 L 0 30 Z M 15 0 L 30 0 L 30 30 L 15 30 Z"
+            _playPauseIcon = "M 0 0 L 15 0 L 15 30 L 0 30 Z M 15 0 L 30 0 L 30 30 L 15 30 Z";
         }
         
         private void OpenFileCommandExecute()
