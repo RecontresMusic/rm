@@ -24,6 +24,35 @@ namespace rm
     #region ViewModel
     public class ViewModel : INotifyPropertyChanged
     {
+        #region HideShowElementsWithSelectPlaylist
+
+        private Visibility _rectangleVisibility = Visibility.Collapsed; // Начальное состояние скрыто
+
+        public Visibility RectangleVisibility
+        {
+            get => _rectangleVisibility;
+            set
+            {
+                _rectangleVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Playlist _selectedPlaylist;
+        public Playlist SelectedPlaylist
+        {
+            get => _selectedPlaylist;
+            set
+            {
+                _selectedPlaylist = value;
+                // Переключение видимости при каждом выборе плейлиста
+                RectangleVisibility = RectangleVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion
+
         public void SavePlaylists(List<Playlist> playlists)
         {
             string json = JsonSerializer.Serialize(playlists);
@@ -34,20 +63,6 @@ namespace rm
         {
             string json = File.ReadAllText("playlists.json");
             return JsonSerializer.Deserialize<List<Playlist>>(json);
-        }
-
-        private Playlist _selectedPlaylist;
-        public Playlist SelectedPlaylist
-        {
-            get => _selectedPlaylist;
-            set
-            {
-                if (_selectedPlaylist != value)
-                {
-                    _selectedPlaylist = value;
-                    OnPropertyChanged();
-                }
-            }
         }
 
         private ObservableCollection<Playlist> _playlists;

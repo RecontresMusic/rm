@@ -209,7 +209,13 @@
 
         <Border Grid.Row="1" Background="#FF9E9E9E" CornerRadius="10" Margin="42,101,22,39"
                 Visibility="{Binding ElementsVisibility}" Grid.ColumnSpan="2">
-            <ListBox x:Name="playlistListBox" ItemsSource="{Binding Playlists}" Style="{StaticResource RoundedListBox}" Margin="3,3,3,3" Visibility="{Binding ElementsVisibility}" Background="#DD656565"
+            <ListBox x:Name="playlistListBox" 
+                     Margin="3,3,3,3" 
+                     ItemsSource="{Binding Playlists}" 
+                     Style="{StaticResource RoundedListBox}"
+                     Visibility="{Binding ElementsVisibility}" 
+                     SelectedItem="{Binding SelectedPlaylist}"
+                     Background="#DD656565"
                      BorderBrush="#FF9E9E9E" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <ListBox.Resources>
                     <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource CustomScrollBar}"/>
@@ -225,7 +231,8 @@
         <Button Height="31" Background="#FFEDEDED" BorderBrush="#FFEDEDED" FontSize="20" 
         FontFamily="Bahnschrift Light" RenderTransformOrigin="0.5,0" Content="➕" 
         Margin="0,66,40,0" Foreground="#FF656565" VerticalAlignment="Top" Grid.Row="1" 
-        HorizontalAlignment="Right" Width="34" Command="{Binding OpenFileCommand}" Grid.Column="2"/>
+        HorizontalAlignment="Right" Width="34" Command="{Binding OpenFileCommand}" Grid.Column="2"
+                Visibility="{Binding RectangleVisibility}"/>
 
         <Button Height="31" BorderBrush="{Binding BorderBrush}" FontSize="25" FontFamily="Bahnschrift Light" RenderTransformOrigin="0.5,0" Content="{Binding ButtonContent}" 
         Margin="42,66,0,0" Foreground="{Binding Foreground}" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" Width="34"
@@ -234,7 +241,8 @@
 
 
         <Border Grid.Row="1" CornerRadius="10" Background="#FFEDEDED" Margin="0,251,40,39" Grid.Column="2">
-            <ListBox x:Name="trackListBox" BorderBrush="#FFEDEDED" Background="#FFEDEDED" ItemsSource="{Binding Items}">
+            <ListBox x:Name="trackListBox" BorderBrush="#FFEDEDED" Background="#FFEDEDED" ItemsSource="{Binding Items}" 
+                     Visibility="{Binding RectangleVisibility}">
                 <ListBox.Resources>
                     <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource CustomScrollBar}"/>
                 </ListBox.Resources>
@@ -252,7 +260,8 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </Border>
-        <Rectangle Margin="0,244,40,0" Grid.Row="1" Stroke="#FF656565" Grid.Column="2" Height="2" VerticalAlignment="Top" Fill="#FF656565"/>
+        <Rectangle Margin="0,244,40,0" Grid.Row="1" Stroke="#FF656565" Grid.Column="2" Height="2" VerticalAlignment="Top" Fill="#FF656565"
+                   Visibility="{Binding RectangleVisibility}"/>
     </Grid>
 </Window>
 
