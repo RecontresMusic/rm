@@ -12,7 +12,7 @@ using System.IO;
 using System.Text.Json;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
-
+using System.Linq;
 
 
 namespace rm
@@ -49,18 +49,25 @@ namespace rm
         }
 
         #endregion
-        public string JJsonPath = "/playlists.json";
+        private const string JsonFilePath = "C:/Users/User/source/repos/rm/MusicData.json";
+        public MusicLibrary MusicData { get; set; }
 
-        public void SavePlaylists(List<Playlist> playlists)
+        public void LoadData()
         {
-            string json = JsonSerializer.Serialize(playlists);
-            File.WriteAllText(JJsonPath, json);
+            if (File.Exists(JsonFilePath))
+            {
+                string json = File.ReadAllText(JsonFilePath);
+                MusicData = JsonSerializer.Deserialize<MusicLibrary>(json) ?? new MusicLibrary();
+            }
+            else
+            {
+                MusicData = new MusicLibrary();
+            }
         }
-
-        public List<Playlist> LoadPlaylists()
+        public void SaveData()
         {
-            string json = File.ReadAllText(JJsonPath);
-            return JsonSerializer.Deserialize<List<Playlist>>(json);
+            string json = JsonSerializer.Serialize(MusicData, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(JsonFilePath, json);
         }
 
         private ObservableCollection<Playlist> _playlists;
@@ -98,7 +105,7 @@ namespace rm
             }
         }
         private Dictionary<string, Track> _tracksDictionary;
-        private const string TracksFilePath = "/track.json"; // Путь к файлу для сохранения треков
+        private const string TracksFilePath = "C:/Users/User/source/repos/rm/Tracks/track.json"; // Путь к файлу для сохранения треков
 
         
 
@@ -122,24 +129,14 @@ namespace rm
 
         public ViewModel()
         {
-            _tracksDictionary = new Dictionary<string, Track>();
-            Items = new ObservableCollection<Track>();
-            _playlists = new ObservableCollection<Playlist>();
-            AddPlaylistCommand = new RelayCommand(AddPlaylist);
-            LoadTracks();
+            MusicData = new MusicLibrary();
+            LoadData();
+            Items = new ObservableCollection<Track>(MusicData.AllTracks);
+            Playlists = new ObservableCollection<Playlist>(MusicData.Playlists);
+
             OpenFileCommand = new RelayCommand(OpenFileCommandExecute);
             ToggleVisibilityCommand = new RelayCommand(ToggleVisibility);
-            TogglePlayCommand = new RelayCommand(ExecuteTogglePlayCommand);
-            _iconMargin = new Thickness(20, 0, 0, 0);
-            _iconWidth = 20;
-            _iconHeight = 25;
-            _playPauseIcon = "M 0 0 L 15 0 L 15 30 L 0 30 Z M 15 0 L 30 0 L 30 30 L 15 30 Z";
-        }
-        private void AddPlaylist()
-        {
-            Playlist newPlaylist = new Playlist { Name = $"Playlist {Playlists.Count + 1}" };
-            Playlists.Add(newPlaylist);
-            OnPropertyChanged(nameof(Playlists));
+            TogglePlayCommand = new RelayCommand(() => IsPlaying = !IsPlaying);
         }
 
         private void LoadTracks()
@@ -177,33 +174,22 @@ namespace rm
             if (openFileDialog.ShowDialog() == true)
             {
                 string path = openFileDialog.FileName;
-                if (path != null)
+                AddTrack(new Track
                 {
-                    AddTrack(path);
-                }
+                    Author = "Unknown", // Это значение следует определить или запросить у пользователя
+                    TrackName = Path.GetFileNameWithoutExtension(path),
+                    Path = path
+                });
             }
         }
 
-        public void AddTrack(string path)
+        public void AddTrack(Track newTrack)
         {
-            string key = Path.GetFileNameWithoutExtension(path);
-
-            if (!_tracksDictionary.ContainsKey(key))
+            if (!MusicData.AllTracks.Exists(t => t.Path == newTrack.Path))
             {
-                var newTrack = new Track
-                {
-                    Author = "Unknown",
-                    TrackName = key,
-                    Path = path
-                };
-
-                _tracksDictionary.Add(key, newTrack);
-                Items.Add(newTrack); // Add to the ObservableCollection as well
-                SaveTracks();
-                OnPropertyChanged(nameof(Items)); // Notify the change for Items
-            } else
-            {
-                MessageBox.Show("Track already exists.");
+                MusicData.AllTracks.Add(newTrack);
+                Items.Add(newTrack);
+                SaveData();
             }
         }
 
@@ -230,7 +216,6 @@ namespace rm
 
 
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -419,17 +404,10 @@ namespace rm
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public bool CanExecute(object parameter)
-        {
-            return _canExecute == null || _canExecute();
-        }
-
-        public void Execute(object parameter)
-        {
-            _execute();
-        }
-        #endregion
+        public bool CanExecute(object parameter) => _canExecute == null || _canExecute();
+        public void Execute(object parameter) => _execute();
     }
+    #endregion
     #endregion
     #region WorkWithWPF
     public partial class Window1 : Window
@@ -438,7 +416,9 @@ namespace rm
         {
             InitializeComponent();
             Closing += OnWindowClosing;
-            this.DataContext = new ViewModel();
+            var viewModel = new ViewModel();
+            this.DataContext = viewModel;
+            //viewModel.Playlists = new ObservableCollection<Playlist>(viewModel.LoadData.());
         }
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
@@ -544,16 +524,30 @@ namespace rm
         public string Author { get; set; }
         public string TrackName { get; set; }
         public string Path { get; set; }
-        // Здесь можете добавить свои свойства, например, Image обложки
+        // Дополнительные свойства, например Image обложки...
     }
+
     public class Playlist
     {
         public string Name { get; set; }
-        public ObservableCollection<Track> Tracks { get; set; }
+        public List<Track> Tracks { get; set; } // Используйте List вместо ObservableCollection для сериализации
 
         public Playlist()
         {
-            Tracks = new ObservableCollection<Track>();
+            Tracks = new List<Track>();
         }
     }
+
+    public class MusicLibrary
+    {
+        public List<Track> AllTracks { get; set; }
+        public List<Playlist> Playlists { get; set; }
+
+        public MusicLibrary()
+        {
+            AllTracks = new List<Track>();
+            Playlists = new List<Playlist>();
+        }
+    }
+
     #endregion
