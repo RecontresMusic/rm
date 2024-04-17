@@ -190,39 +190,40 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Tracks\playlists.json" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="track.json" />
+    <None Include="Tracks\track.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="bar.png" />
+    <Resource Include="src\bar.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="cloud.png" />
+    <Resource Include="src\cloud.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="peopleforbar.png" />
+    <Resource Include="src\peopleforbar.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="bluecloud.png" />
+    <Resource Include="src\bluecloud.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="play.png" />
+    <Resource Include="src\play.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="nextprev.png" />
+    <Resource Include="src\nextprev.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="nextt.png" />
-    <Resource Include="playt.png" />
-    <Resource Include="angle-double-right.png" />
+    <Resource Include="src\nextt.png" />
+    <Resource Include="src\playt.png" />
+    <Resource Include="src\angle-double-right.png" />
     <Content Include="arrow-small-right.svg" />
-    <Resource Include="rewind.png" />
+    <Resource Include="src\rewind.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -236,5 +237,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

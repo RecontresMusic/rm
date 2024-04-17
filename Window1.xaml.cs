@@ -12,10 +12,7 @@ using System.IO;
 using System.Text.Json;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
-using System.Windows.Controls.Primitives;
-using Google.Protobuf.WellKnownTypes;
-using static Mysqlx.Expect.Open.Types.Condition.Types;
-using MySqlX.XDevAPI.Common;
+
 
 
 namespace rm
@@ -52,16 +49,17 @@ namespace rm
         }
 
         #endregion
+        public string JJsonPath = "/playlists.json";
 
         public void SavePlaylists(List<Playlist> playlists)
         {
             string json = JsonSerializer.Serialize(playlists);
-            File.WriteAllText("playlist.json", json);
+            File.WriteAllText(JJsonPath, json);
         }
 
         public List<Playlist> LoadPlaylists()
         {
-            string json = File.ReadAllText("playlists.json");
+            string json = File.ReadAllText(JJsonPath);
             return JsonSerializer.Deserialize<List<Playlist>>(json);
         }
 
@@ -100,7 +98,7 @@ namespace rm
             }
         }
         private Dictionary<string, Track> _tracksDictionary;
-        private const string TracksFilePath = "E:/rm/rm/track.json"; // Путь к файлу для сохранения треков
+        private const string TracksFilePath = "/track.json"; // Путь к файлу для сохранения треков
 
         
 
@@ -540,28 +538,22 @@ namespace rm
     }
 }
 #endregion
-#region Classes
-public class Item
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-}
-
-public class Track
-{
-    public string Author { get; set; }
-    public string TrackName { get; set; }
-    public string Path { get; set; }
-    // Здесь можете добавить свои свойства, например, Image обложки
-}
-public class Playlist
-{
-    public string Name { get; set; }
-    public ObservableCollection<Track> Tracks { get; set; }
-
-    public Playlist()
+    #region Classes
+    public class Track
     {
-        Tracks = new ObservableCollection<Track>();
+        public string Author { get; set; }
+        public string TrackName { get; set; }
+        public string Path { get; set; }
+        // Здесь можете добавить свои свойства, например, Image обложки
     }
-}
-#endregion
+    public class Playlist
+    {
+        public string Name { get; set; }
+        public ObservableCollection<Track> Tracks { get; set; }
+
+        public Playlist()
+        {
+            Tracks = new ObservableCollection<Track>();
+        }
+    }
+    #endregion

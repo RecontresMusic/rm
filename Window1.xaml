@@ -150,7 +150,7 @@
         </Button>
 
         <!-- Иконки облака снизу -->
-        <Image Grid.Row="1" Source="/cloud.png" RenderTransformOrigin="0.5,0.5" Margin="0,0,-46,-51" HorizontalAlignment="Right" Width="155" Grid.RowSpan="2" Grid.ColumnSpan="2" Height="156" VerticalAlignment="Bottom" Grid.Column="2">
+        <Image Grid.Row="1" Source="/src/cloud.png" RenderTransformOrigin="0.5,0.5" Margin="0,0,-46,-51" HorizontalAlignment="Right" Width="155" Grid.RowSpan="2" Grid.ColumnSpan="2" Height="156" VerticalAlignment="Bottom" Grid.Column="2">
             <Image.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleX="-1"/>
@@ -162,7 +162,7 @@
         </Image>
         <Border Background="LightBlue" MouseLeftButtonDown="DragMoveWindow" Margin="0,0,0,10" Grid.ColumnSpan="3"/>
         <!-- Иконка  облака сверху -->
-        <Image Source="/cloud.png" RenderTransformOrigin="0.5,0" Margin="0,-12,-46,0" Height="210" VerticalAlignment="Top" Grid.RowSpan="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="205" Grid.Column="2">
+        <Image Source="/src/cloud.png" RenderTransformOrigin="0.5,0" Margin="0,-12,-46,0" Height="210" VerticalAlignment="Top" Grid.RowSpan="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="205" Grid.Column="2">
             <Image.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleY="-1" ScaleX="-1"/>
@@ -172,7 +172,7 @@
                 </TransformGroup>
             </Image.RenderTransform>
         </Image>
-        <Image MouseLeftButtonDown="DragMoveWindow" Source="/cloud.png" RenderTransformOrigin="0.5,0" Margin="0,-24,10,0" Height="210" VerticalAlignment="Top" Grid.RowSpan="2" HorizontalAlignment="Right" Width="206" Grid.Column="2">
+        <Image MouseLeftButtonDown="DragMoveWindow" Source="/src/cloud.png" RenderTransformOrigin="0.5,0" Margin="0,-24,10,0" Height="210" VerticalAlignment="Top" Grid.RowSpan="2" HorizontalAlignment="Right" Width="206" Grid.Column="2">
             <Image.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleY="-1" ScaleX="-1"/>
@@ -182,7 +182,7 @@
                 </TransformGroup>
             </Image.RenderTransform>
         </Image>
-        <Image Source="/cloud.png" RenderTransformOrigin="0.5,0" Margin="-48,16,0,0" Height="210" VerticalAlignment="Top" Grid.RowSpan="2" HorizontalAlignment="Left" Width="210">
+        <Image Source="/src/cloud.png" RenderTransformOrigin="0.5,0" Margin="-48,16,0,0" Height="210" VerticalAlignment="Top" Grid.RowSpan="2" HorizontalAlignment="Left" Width="210">
             <Image.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleY="-1" ScaleX="1"/>
