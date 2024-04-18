@@ -4,7 +4,33 @@
       "Author": "Unknown",
       "TrackName": "LIL_PEEP_-_haunt_u_65701571",
       "Path": "C:\\Users\\User\\Downloads\\LIL_PEEP_-_haunt_u_65701571.mp3"
+    },
+    {
+      "Author": "Unknown",
+      "TrackName": "Lil_Peep_-_Save_That_Shit_64289594",
+      "Path": "C:\\Users\\User\\Downloads\\Lil_Peep_-_Save_That_Shit_64289594.mp3"
     }
   ],
-  "Playlists": []
+  "Playlists": [
+    {
+      "Name": "11",
+      "Tracks": [
+        {
+          "Author": "Unknown",
+          "TrackName": "LIL_PEEP_-_haunt_u_65701571",
+          "Path": "C:\\Users\\User\\Downloads\\LIL_PEEP_-_haunt_u_65701571.mp3"
+        }
+      ]
+    },
+    {
+      "Name": "21",
+      "Tracks": [
+        {
+          "Author": "Unknown",
+          "TrackName": "Lil_Peep_-_Save_That_Shit_64289594",
+          "Path": "C:\\Users\\User\\Downloads\\Lil_Peep_-_Save_That_Shit_64289594.mp3"
+        }
+      ]
+    }
+  ]
 }

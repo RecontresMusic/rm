@@ -144,12 +144,14 @@ namespace rm
             OpenFileCommand = new RelayCommand(OpenFileCommandExecute);
             ToggleVisibilityCommand = new RelayCommand(ToggleVisibility);
             TogglePlayCommand = new RelayCommand(() => IsPlaying = !IsPlaying);
+
+
             _iconMargin = new Thickness(20, 0, 0, 0);
             _iconWidth = 20;
             _iconHeight = 25;
             _playPauseIcon = "M 0 0 L 15 0 L 15 30 L 0 30 Z M 15 0 L 30 0 L 30 30 L 15 30 Z";
         }
-        
+
         private void OpenFileCommandExecute()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -161,24 +163,39 @@ namespace rm
             if (openFileDialog.ShowDialog() == true)
             {
                 string path = openFileDialog.FileName;
+                string playlistName = Playlists.Count.ToString()+1; // Замените на логику получения имени плейлиста от пользователя
                 AddTrack(new Track
                 {
-                    Author = "Unknown", // Это значение следует определить или запросить у пользователя
+                    Author = "Unknown",
                     TrackName = Path.GetFileNameWithoutExtension(path),
                     Path = path
-                });
+                }, playlistName);
             }
         }
 
-        public void AddTrack(Track newTrack)
+
+        public void AddTrack(Track newTrack, string playlistName)
         {
             if (!MusicData.AllTracks.Exists(t => t.Path == newTrack.Path))
             {
-                MusicData.AllTracks.Add(newTrack);
-                Items.Add(newTrack);
-                SaveData();
+                MusicData.AllTracks.Add(newTrack); // Добавление трека в общий список
+                Items.Add(newTrack); // Обновление UI
+
+                // Находим плейлист по имени и добавляем в него трек
+                var playlist = MusicData.Playlists.FirstOrDefault(p => p.Name == playlistName);
+                if (playlist == null)
+                {
+                    playlist = new Playlist { Name = playlistName };
+                    MusicData.Playlists.Add(playlist);
+                    Playlists.Add(playlist); // Если это ObservableCollection, обновляющая UI
+                }
+                playlist.Tracks.Add(newTrack);
+
+
+                SaveData(); // Сохраняем изменения
             }
         }
+
 
         public void SaveTracks()
         {
