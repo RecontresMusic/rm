@@ -51,6 +51,29 @@ namespace rm
         #endregion
         private const string JsonFilePath = "C:/Users/User/source/repos/rm/MusicData.json";
         public MusicLibrary MusicData { get; set; }
+        private MediaPlayer mediaPlayer = new MediaPlayer();
+        private Track _currentTrack;
+        public ICommand PlayCommand { get; private set; }
+
+        private void PlayTrack(Track track)
+        {
+            if (track != null)
+            {
+                mediaPlayer.Open(new Uri(track.Path));
+                mediaPlayer.Play();
+            }
+        }
+
+        public Track CurrentTrack
+        {
+            get => _currentTrack;
+            set
+            {
+                _currentTrack = value;
+                OnPropertyChanged(nameof(CurrentTrack));
+                PlayTrack(_currentTrack);
+            }
+        }
 
         private void AddPlaylist()
         {
@@ -114,7 +137,20 @@ namespace rm
         private Dictionary<string, Track> _tracksDictionary;
         private const string TracksFilePath = "C:/Users/User/source/repos/rm/Tracks/track.json"; // Путь к файлу для сохранения треков
 
-        
+        private TimeSpan _currentTrackDuration;
+        public TimeSpan CurrentTrackDuration
+        {
+            get => _currentTrackDuration;
+            set
+            {
+                if (_currentTrackDuration != value)
+                {
+                    _currentTrackDuration = value;
+                    OnPropertyChanged(nameof(CurrentTrackDuration));
+                }
+            }
+        }
+
 
         public Dictionary<string, Track> TracksDictionary
         {
@@ -144,12 +180,61 @@ namespace rm
             OpenFileCommand = new RelayCommand(OpenFileCommandExecute);
             ToggleVisibilityCommand = new RelayCommand(ToggleVisibility);
             TogglePlayCommand = new RelayCommand(() => IsPlaying = !IsPlaying);
-
-
+            PlayCommand = new RelayCommand(ExecutePlayCommand);
+            mediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
+            mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
+            mediaPlayer.MediaFailed += MediaPlayer_MediaFailed;            
             _iconMargin = new Thickness(20, 0, 0, 0);
             _iconWidth = 20;
             _iconHeight = 25;
             _playPauseIcon = "M 0 0 L 15 0 L 15 30 L 0 30 Z M 15 0 L 30 0 L 30 30 L 15 30 Z";
+        }
+
+        private void MediaPlayer_MediaFailed(object sender, ExceptionEventArgs e)
+        {
+            // Логика обработки ошибки воспроизведения
+            MessageBox.Show($"Ошибка воспроизведения: {e.ErrorException.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            IsPlaying = false; // Обновление состояния кнопки воспроизведения
+            OnPropertyChanged(nameof(IsPlaying));
+        }
+
+
+        private void MediaPlayer_MediaOpened(object sender, EventArgs e)
+        {
+            // Логика обработки успешного открытия файла
+            IsPlaying = true; // Предполагая, что IsPlaying управляет иконкой кнопки play/pause.
+            OnPropertyChanged(nameof(IsPlaying));
+
+            // Обновление UI, например, с длительностью трека, если это нужно
+            Duration trackDuration = mediaPlayer.NaturalDuration;
+            if (trackDuration.HasTimeSpan)
+            {
+                OnPropertyChanged(nameof(CurrentTrackDuration)); // Предполагается наличие свойства CurrentTrackDuration
+            }
+        }
+
+
+        private void MediaPlayer_MediaEnded(object sender, EventArgs e)
+        {
+            mediaPlayer.Stop();
+            IsPlaying = false;
+        }
+
+        private void ExecutePlayCommand()
+        {
+            if (mediaPlayer.Source != null && mediaPlayer.CanPause)
+            {
+                if (IsPlaying)
+                {
+                    mediaPlayer.Pause();
+                    IsPlaying = false;
+                }
+                else
+                {
+                    mediaPlayer.Play();
+                    IsPlaying = true;
+                }
+            }
         }
 
         private void OpenFileCommandExecute()
