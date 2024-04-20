@@ -258,6 +258,49 @@ namespace rm
             }
         }
 
+        #region LoadFilePath
+
+        class Program
+        {
+            private static void Main(string[] args)
+            {
+                Console.WriteLine("Monitoring changes to .sln files...");
+                using (var watcher = new FileSystemWatcher())
+                {
+                    watcher.Path = args.Length > 0 ? args[0] : AppDomain.CurrentDomain.BaseDirectory; // Установите путь для мониторинга
+                    watcher.Filter = "*.sln"; // Фильтр для отслеживания файлов .sln
+
+                    // Выбор типов изменений для отслеживания
+                    watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+
+                    // Добавление событий
+                    watcher.Changed += OnChanged;
+                    watcher.Created += OnChanged;
+                    watcher.Deleted += OnChanged;
+                    watcher.Renamed += OnRenamed;
+
+                    // Начало мониторинга
+                    watcher.EnableRaisingEvents = true;
+
+                    // Поддерживание работы консоли
+                    Console.WriteLine("Press 'q' to quit.");
+                    while (Console.Read() != 'q') ;
+                }
+            }
+
+            private static void OnChanged(object sender, FileSystemEventArgs e)
+            {
+                Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+            }
+
+            private static void OnRenamed(object sender, RenamedEventArgs e)
+            {
+                Console.WriteLine($"File: {e.OldFullPath} renamed to {e.FullPath}");
+            }
+        }
+
+        #endregion
+
 
         public void AddTrack(Track newTrack, string playlistName)
         {
