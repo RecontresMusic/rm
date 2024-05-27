@@ -26,7 +26,7 @@ namespace rm
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string login = LoginField.Text;
-            string password = PasswordBox.Password;  // Используем PasswordBox для более безопасной работы с паролями
+            string password = PasswordBox.Password;
             if (dbConnect.VerifyLogin(login, password))
             {
                 MessageBox.Show("Login successful!");
@@ -34,16 +34,14 @@ namespace rm
             }
             else
             {
-                MessageBox.Show("Incorrect Login or Password");
-               // MessageBox.Show()
+                MessageBox.Show("Incorrect Login or Password");               
             }
         }
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
             string login = LoginField.Text;
-            string password = PasswordBox.Password;  // Используем PasswordBox для безопасности
-
+            string password = PasswordBox.Password;
             if (!string.IsNullOrWhiteSpace(login) && !string.IsNullOrWhiteSpace(password))
             {
                 try
