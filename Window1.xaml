@@ -5,7 +5,7 @@
         xmlns:local="clr-namespace:rm"
         Title="Recmus" Height="700" Width="1280" WindowStyle="None" RenderTransformOrigin="0,0" MinWidth="600" MinHeight="700"
         AllowsTransparency="True" Background="Transparent"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded" Icon="/icon.ico">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" CornerRadius="0" GlassFrameThickness="0" UseAeroCaptionButtons="False"/>
@@ -75,7 +75,7 @@
     <Grid x:Name="mainGrid" Background="LightBlue">
         <!-- Определения столбцов -->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="82*" MinWidth="100"/>
+            <ColumnDefinition Width="82*" MinWidth="150"/>
             <ColumnDefinition Width="{Binding FirstColumnWidth}"/>
             <ColumnDefinition Width="463*"/>
             <!-- Основной контент -->
