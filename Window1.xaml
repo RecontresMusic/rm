@@ -66,10 +66,6 @@
         </TransformGroup>
     </Window.RenderTransform>
 
-    <Window.DataContext>
-        <local:ViewModel/>
-    </Window.DataContext>
-
     <!-- for animatsiya -->
 
     <Grid x:Name="mainGrid" Background="LightBlue">
