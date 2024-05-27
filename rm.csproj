@@ -219,6 +219,7 @@
     <Resource Include="src\nextprev.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="icon.svg" />
     <Resource Include="iconreg.ico" />
     <Resource Include="icon.ico" />
     <Resource Include="icon100x100.png" />
