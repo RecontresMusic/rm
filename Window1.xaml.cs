@@ -17,10 +17,88 @@ using System.Linq;
 
 namespace rm
 {
+    public class Track
+    {
+        public string Title { get; private set; }
+        public string Artist { get; private set; }
+        public double Duration { get; private set; }
+        public string Genre { get; private set; }
+        public string Path { get; private set; }
+
+        public Track(string title, string artist, double duration, string genre, string path)
+        {
+            Title = title ?? "Unknown Title";
+            Artist = artist ?? "Unknown Artist";
+            Duration = duration;
+            Genre = genre ?? "Unknown Genre";
+            Path = path ?? "Unknown Path";
+        }
+
+    }
+
+    public class Playlist
+    {
+        public string Name { get; set; }
+        public ObservableCollection<Track> Tracks { get; set; }
+
+        public Playlist()
+        {
+            Tracks = new ObservableCollection<Track>();
+        }
+    }
+
+    public class MusicLibrary
+    {
+        public ObservableCollection<Track> AllTracks { get; set; }
+        public ObservableCollection<Playlist> Playlists { get; set; }
+
+        public MusicLibrary()
+        {
+            AllTracks = new ObservableCollection<Track>();
+            Playlists = new ObservableCollection<Playlist>();
+        }
+    }
 
     #region ViewModel
     public class ViewModel : INotifyPropertyChanged
     {
+        private MediaPlayer mediaPlayer = new MediaPlayer();
+        public MusicLibrary MusicData { get; set; }
+        private Track _currentTrack;
+        private bool _isPlaying;
+
+        public ViewModel()
+        {
+            MusicData = new MusicLibrary();
+            LoadData();
+            mediaPlayer.MediaOpened += (s, e) => { IsPlaying = true; };
+            mediaPlayer.MediaEnded += (s, e) => { IsPlaying = false; };
+            mediaPlayer.MediaFailed += (s, e) => MessageBox.Show("Playback Error: " + e.ErrorException.Message);
+
+            PlayCommand = new RelayCommand(() => {
+                if (CurrentTrack != null)
+                {
+                    mediaPlayer.Open(new Uri(CurrentTrack.Path));
+                    mediaPlayer.Play();
+                }
+            });
+            MusicData = new MusicLibrary();
+            LoadData();
+            Items = new ObservableCollection<Track>(MusicData.AllTracks);
+            Playlists = new ObservableCollection<Playlist>(MusicData.Playlists);
+            AddPlaylistCommand = new RelayCommand(AddPlaylist);
+            OpenFileCommand = new RelayCommand(OpenFileCommandExecute);
+            ToggleVisibilityCommand = new RelayCommand(ToggleVisibility);
+            TogglePlayCommand = new RelayCommand(() => IsPlaying = !IsPlaying);
+            PlayCommand = new RelayCommand(ExecutePlayCommand);
+            mediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
+            mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
+            mediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
+            _iconMargin = new Thickness(20, 0, 0, 0);
+            _iconWidth = 20;
+            _iconHeight = 25;
+            _playPauseIcon = "M 0 0 L 15 0 L 15 30 L 0 30 Z M 15 0 L 30 0 L 30 30 L 15 30 Z";
+        }
         #region HideShowElementsWithSelectPlaylist
 
         private Visibility _rectangleVisibility = Visibility.Collapsed; // Начальное состояние скрыто
@@ -50,9 +128,7 @@ namespace rm
 
         #endregion
         private const string JsonFilePath = "C:/Users/User/source/repos/rm/MusicData.json";
-        public MusicLibrary MusicData { get; set; }
-        private MediaPlayer mediaPlayer = new MediaPlayer();
-        private Track _currentTrack;
+        private ObservableCollection<Playlist> _playlists;
         public ICommand PlayCommand { get; private set; }
 
         private void PlayTrack(Track track)
@@ -67,12 +143,7 @@ namespace rm
         public Track CurrentTrack
         {
             get => _currentTrack;
-            set
-            {
-                _currentTrack = value;
-                OnPropertyChanged(nameof(CurrentTrack));
-                PlayTrack(_currentTrack);
-            }
+            set { _currentTrack = value; OnPropertyChanged(); }
         }
 
         private void AddPlaylist()
@@ -84,23 +155,31 @@ namespace rm
 
         public void LoadData()
         {
-            if (File.Exists(JsonFilePath))
+            try
             {
-                string json = File.ReadAllText(JsonFilePath);
-                MusicData = JsonSerializer.Deserialize<MusicLibrary>(json) ?? new MusicLibrary();
+                string json = File.ReadAllText("MusicData.json");
+                MusicData = JsonSerializer.Deserialize<MusicLibrary>(json);
+                if (MusicData.AllTracks.Any(t => t.Title == null || t.Artist == null || t.Genre == null || t.Path == null))
+                {
+                    MessageBox.Show("One or more tracks in the JSON file have null values.");
+                }
             }
-            else
+            catch (FileNotFoundException)
             {
                 MusicData = new MusicLibrary();
             }
+            catch (JsonException ex)
+            {
+                MessageBox.Show("Error loading data: " + ex.Message);
+            }
         }
+
         public void SaveData()
         {
             string json = JsonSerializer.Serialize(MusicData, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(JsonFilePath, json);
         }
 
-        private ObservableCollection<Playlist> _playlists;
         public ObservableCollection<Playlist> Playlists
         {
             get => _playlists;
@@ -111,8 +190,7 @@ namespace rm
             }
         }
 
-        #region Init
-        private bool _isPlaying;
+        #region Init        
 
         public bool IsPlaying
         {
@@ -170,25 +248,7 @@ namespace rm
         public ICommand TogglePlayCommand { get; }
         public ICommand AddPlaylistCommand { get; private set; }
 
-        public ViewModel()
-        {
-            MusicData = new MusicLibrary();
-            LoadData();
-            Items = new ObservableCollection<Track>(MusicData.AllTracks);
-            Playlists = new ObservableCollection<Playlist>(MusicData.Playlists);
-            AddPlaylistCommand = new RelayCommand(AddPlaylist);
-            OpenFileCommand = new RelayCommand(OpenFileCommandExecute);
-            ToggleVisibilityCommand = new RelayCommand(ToggleVisibility);
-            TogglePlayCommand = new RelayCommand(() => IsPlaying = !IsPlaying);
-            PlayCommand = new RelayCommand(ExecutePlayCommand);
-            mediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
-            mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
-            mediaPlayer.MediaFailed += MediaPlayer_MediaFailed;            
-            _iconMargin = new Thickness(20, 0, 0, 0);
-            _iconWidth = 20;
-            _iconHeight = 25;
-            _playPauseIcon = "M 0 0 L 15 0 L 15 30 L 0 30 Z M 15 0 L 30 0 L 30 30 L 15 30 Z";
-        }
+
 
         private void MediaPlayer_MediaFailed(object sender, ExceptionEventArgs e)
         {
@@ -248,13 +308,20 @@ namespace rm
             if (openFileDialog.ShowDialog() == true)
             {
                 string path = openFileDialog.FileName;
-                string playlistName = Playlists.Count.ToString()+1; // Замените на логику получения имени плейлиста от пользователя
-                AddTrack(new Track
-                {
-                    Author = "Unknown",
-                    TrackName = Path.GetFileNameWithoutExtension(path),
-                    Path = path
-                }, playlistName);
+                // Получаем имя плейлиста от пользователя или используем дефолтное
+                string playlistName = $"Playlist {Playlists.Count + 1}"; // Предполагается, что имя можно будет редактировать пользователем
+
+                // Создаем новый трек с учетом исправленных свойств
+                Track newTrack = new Track(
+                    title: Path.GetFileNameWithoutExtension(path),
+                    artist: "Unknown",
+                    duration: 0, // Длительность неизвестна или загружается отдельно
+                    genre: "Unknown",
+                    path: path
+                );
+
+                // Добавляем трек в плейлист
+                AddTrack(newTrack, playlistName);
             }
         }
 
@@ -262,27 +329,30 @@ namespace rm
         #endregion
 
 
+        // Исправьте использование свойств в соответствии с вашим классом Track
         public void AddTrack(Track newTrack, string playlistName)
         {
-            if (!MusicData.AllTracks.Exists(t => t.Path == newTrack.Path))
+            // Проверяем, существует ли трек с таким же путем в библиотеке
+            if (!MusicData.AllTracks.Any(t => t.Path == newTrack.Path))
             {
-                MusicData.AllTracks.Add(newTrack); // Добавление трека в общий список
-                Items.Add(newTrack); // Обновление UI
+                MusicData.AllTracks.Add(newTrack);
+                Items.Add(newTrack); // Обновляем коллекцию треков в UI
 
-                // Находим плейлист по имени и добавляем в него трек
+                // Пытаемся найти плейлист по имени
                 var playlist = MusicData.Playlists.FirstOrDefault(p => p.Name == playlistName);
                 if (playlist == null)
                 {
+                    // Если плейлист не найден, создаем новый и добавляем в библиотеку
                     playlist = new Playlist { Name = playlistName };
                     MusicData.Playlists.Add(playlist);
-                    Playlists.Add(playlist); // Если это ObservableCollection, обновляющая UI
+                    Playlists.Add(playlist); // Обновляем коллекцию плейлистов в UI
                 }
-                playlist.Tracks.Add(newTrack);
+                playlist.Tracks.Add(newTrack); // Добавляем трек в плейлист
 
-
-                SaveData(); // Сохраняем изменения
+                SaveData(); // Сохраняем изменения в файл
             }
         }
+
 
 
         public void SaveTracks()
@@ -291,7 +361,8 @@ namespace rm
             {
                 string json = JsonSerializer.Serialize(_tracksDictionary);
                 File.WriteAllText(TracksFilePath, json);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Debug.WriteLine("Error saving tracks: " + ex.Message);
                 // Здесь можете добавить более подробную обработку ошибок
@@ -308,7 +379,7 @@ namespace rm
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        
+
         #region Buttons
 
         private Brush _background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF656565"));
@@ -495,13 +566,14 @@ namespace rm
     #region WorkWithWPF
     public partial class Window1 : Window
     {
+        private MediaPlayer mediaPlayer = new MediaPlayer();
+        private MusicLibrary musicLibrary = new MusicLibrary();
         public Window1()
         {
             InitializeComponent();
+            var viewModel = new ViewModel(); // Инициализация ViewModel
+            DataContext = viewModel; // Установка DataContext для привязки
             Closing += OnWindowClosing;
-            var viewModel = new ViewModel();
-            this.DataContext = viewModel;
-            //viewModel.Playlists = new ObservableCollection<Playlist>(viewModel.LoadData.());
         }
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
@@ -557,7 +629,8 @@ namespace rm
             {
                 this.WindowState = WindowState.Maximized;
                 (sender as Button).Content = "▣";
-            } else
+            }
+            else
             {
                 this.WindowState = WindowState.Normal;
                 (sender as Button).Content = "▢";
@@ -569,7 +642,8 @@ namespace rm
             if (this.WindowState != WindowState.Maximized)
             {
                 this.WindowState = WindowState.Maximized;
-            } else
+            }
+            else
             {
                 this.WindowState = WindowState.Normal;
             }
@@ -599,38 +673,6 @@ namespace rm
             }
         }
     }
-}
-#endregion
-    #region Classes
-    public class Track
-    {
-        public string Author { get; set; }
-        public string TrackName { get; set; }
-        public string Path { get; set; }
-        // Дополнительные свойства, например Image обложки...
-    }
-
-    public class Playlist
-    {
-        public string Name { get; set; }
-        public List<Track> Tracks { get; set; } // Используйте List вместо ObservableCollection для сериализации
-
-        public Playlist()
-        {
-            Tracks = new List<Track>();
-        }
-    }
-
-    public class MusicLibrary
-    {
-        public List<Track> AllTracks { get; set; }
-        public List<Playlist> Playlists { get; set; }
-
-        public MusicLibrary()
-        {
-            AllTracks = new List<Track>();
-            Playlists = new List<Playlist>();
-        }
-    }
-
     #endregion
+
+}

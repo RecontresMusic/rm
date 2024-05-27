@@ -1,0 +1,25 @@
+{
+  "AllTracks": [
+    {
+      "Title": "Some Song",
+      "Artist": "Some Artist",
+      "Duration": 300,
+      "Genre": "Some Genre",
+      "Path": "path/to/song.mp3"
+    }
+  ],
+  "Playlists": [
+    {
+      "Name": "My Playlist",
+      "Tracks": [
+        {
+          "Title": "Some Song",
+          "Artist": "Some Artist",
+          "Duration": 300,
+          "Genre": "Some Genre",
+          "Path": "path/to/song.mp3"
+        }
+      ]
+    }
+  ]
+}
